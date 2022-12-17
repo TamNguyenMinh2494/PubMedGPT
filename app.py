@@ -3,13 +3,15 @@ import streamlit as st
 
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 
 @st.cache(allow_output_mutation=True)
 def load_model():
     tokenizer = GPT2Tokenizer.from_pretrained(
         "stanford-crfm/pubmed_gpt_tokenizer")
     model = GPT2LMHeadModel.from_pretrained(
-        "stanford-crfm/pubmedgpt").to("cuda")
+        "stanford-crfm/pubmedgpt").to(device)
     return tokenizer, model
 
 
@@ -17,7 +19,6 @@ tokenizer, model = load_model()
 
 st.title("PubMedGPT Demo")
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # define 2 tabs for the app
 tab = st.sidebar.radio("Choose a tab", ["Text Generation", "MedQA"])
